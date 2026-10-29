@@ -63,7 +63,7 @@ async function callApi(action, payload) {
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(data.error || "Ocorreu um erro inesperado.");
+    throw new Error(data.error || `Ocorreu um erro inesperado (código ${res.status}).`);
   }
   return data;
 }
@@ -154,7 +154,7 @@ function renderReview() {
     comment.className = "comment show";
     comment.textContent = review.comment || "";
   });
-  btnConvContinue.disabled = !state.prepReview;
+  btnReview.textContent = state.prepReview ? "Revisar novamente" : "Revisar minha preparação";
 }
 
 function renderStepper() {
@@ -313,7 +313,13 @@ btnReview.addEventListener("click", async () => {
 });
 
 btnConvContinue.addEventListener("click", () => {
-  if (!state.prepReview) return;
+  const missing = Object.values(state.prep).some((v) => !v.trim());
+  if (missing) {
+    convError.style.display = "block";
+    convError.textContent = "Preencha os quatro campos antes de continuar.";
+    return;
+  }
+  convError.style.display = "none";
   showView("practicar");
   renderStepper();
   renderChat();
@@ -393,6 +399,7 @@ btnReset.addEventListener("click", () => {
   localStorage.removeItem(STORAGE_KEY);
   state = structuredClone(initialState);
   fillFormsFromState();
+  btnReview.disabled = false;
   renderReview();
   renderStepper();
   renderChat();
