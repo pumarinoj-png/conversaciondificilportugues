@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
 // Preparar uma conversa difícil — lógica de cliente (vanilla JS)
-// Todo el estado se guarda en localStorage. Las llamadas a la IA pasan por
+// Todo el estado se guarda en sessionStorage. Las llamadas a la IA pasan por
 // /api/chat (una única función serverless) para no exponer la API key.
 // ---------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ const initialState = {
 
 function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return structuredClone(initialState);
     const parsed = JSON.parse(raw);
     return Object.assign(structuredClone(initialState), parsed);
@@ -47,7 +47,7 @@ let state = loadState();
 
 function saveState() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
     // almacenamiento no disponible: seguimos funcionando en memoria
   }
@@ -396,7 +396,7 @@ btnCloseFeedback.addEventListener("click", () => {
 
 btnReset.addEventListener("click", () => {
   if (!confirm("Tem certeza de que deseja reiniciar? Todo o progresso será perdido.")) return;
-  localStorage.removeItem(STORAGE_KEY);
+  sessionStorage.removeItem(STORAGE_KEY);
   state = structuredClone(initialState);
   fillFormsFromState();
   btnReview.disabled = false;
