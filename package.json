@@ -1,0 +1,6 @@
+{
+  "name": "preparar-conversa-dificil",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site estático + 1 função serverless na Vercel para preparar e praticar uma conversa difícil."
+}
